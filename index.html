@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FrogMort – PC games</title>
+<meta name="description" content="Free PC games made by FrogMort. Download, read the player guides and see screenshots.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%231d6b1d'/><circle cx='34' cy='42' r='13' fill='%23ff6a00'/><circle cx='66' cy='42' r='13' fill='%23ff6a00'/><rect x='31' y='36' width='6' height='12' rx='3' fill='%23000'/><rect x='63' y='36' width='6' height='12' rx='3' fill='%23000'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --night: #040805;
+    --leaf: #0d2a10;
+    --moss: #2e9a2f;
+    --lime: #9bdc3b;
+    --eye: #ff6a00;
+    --belly: #e9e4cf;
+    --ink: #d9e6d4;
+    --muted: #8fa58c;
+    --line: #1f3a22;
+    --font: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--night);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+  }
+  a { color: var(--lime); }
+  a:focus-visible, summary:focus-visible, .btn:focus-visible {
+    outline: 3px solid var(--eye);
+    outline-offset: 3px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    background: var(--night) url("images/frog-hero.jpg") right center / cover no-repeat;
+  }
+  .hero::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, var(--night) 0%, rgba(4,8,5,.88) 28%, rgba(4,8,5,0) 62%);
+    pointer-events: none;
+  }
+  .hero > * { position: relative; }
+  .nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem clamp(1.25rem, 5vw, 4rem);
+  }
+  .nav .mark { font-weight: 800; font-size: 1.25rem; letter-spacing: -.01em; color: var(--belly); text-decoration: none; }
+  .nav ul { display: flex; gap: 1.75rem; list-style: none; margin: 0; padding: 0; }
+  .nav ul a { color: var(--ink); text-decoration: none; font-weight: 600; }
+  .nav ul a:hover { color: var(--eye); }
+  .hero-copy {
+    margin: auto 0;
+    padding: 2rem clamp(1.25rem, 5vw, 4rem) 5rem;
+    max-width: 44rem;
+  }
+  .hero h1 {
+    margin: 0;
+    font-size: clamp(4.25rem, 8.5vw, 8rem);
+    line-height: .86;
+    font-weight: 800;
+    letter-spacing: -.045em;
+    color: var(--belly);
+    font-variation-settings: "opsz" 96;
+  }
+  .hero h1 span { color: var(--moss); }
+  .hero p.lede {
+    margin: 1.5rem 0 2rem;
+    font-size: 1.3rem;
+    max-width: 28rem;
+    color: var(--ink);
+  }
+  .btn {
+    display: inline-block;
+    padding: .85rem 1.6rem;
+    border-radius: 999px;
+    background: var(--eye);
+    color: #1a0a00;
+    font-weight: 800;
+    text-decoration: none;
+    transition: background .15s;
+  }
+  .btn:hover { background: #ff8a33; }
+  .btn.quiet {
+    background: transparent;
+    color: var(--ink);
+    border: 2px solid var(--line);
+  }
+  .btn.quiet:hover { border-color: var(--moss); background: transparent; }
+  .btn.soon { cursor: default; color: var(--muted); }
+  .btn.soon:hover { border-color: var(--line); }
+
+  /* ---------- Layout ---------- */
+  main { background: linear-gradient(180deg, var(--night), var(--leaf) 140%); }
+  section { padding: clamp(3.5rem, 8vw, 6.5rem) clamp(1.25rem, 5vw, 4rem); }
+  .wrap { max-width: 68rem; margin: 0 auto; }
+  h2 {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1.05;
+    letter-spacing: -.03em;
+    margin: 0 0 .5rem;
+    color: var(--belly);
+  }
+  .sub { color: var(--muted); max-width: 36rem; margin: 0 0 3rem; }
+
+  /* ---------- Games ---------- */
+  .game { border-top: 1px solid var(--line); padding: 3rem 0; }
+  .game:first-of-type { border-top: 0; padding-top: 0; }
+  .game-head { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: space-between; align-items: flex-end; }
+  .game h3 { margin: 0; font-size: clamp(1.75rem, 4vw, 2.5rem); letter-spacing: -.025em; color: var(--belly); }
+  .game .tag { color: var(--lime); font-weight: 600; margin: .25rem 0 0; }
+  .game p.blurb { max-width: 40rem; margin: 1rem 0 1.5rem; }
+  .actions { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+  .note { font-size: .9rem; color: var(--muted); margin: .75rem 0 0; max-width: 36rem; }
+
+  .shots {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  .shot {
+    aspect-ratio: 16 / 9;
+    border-radius: 14px;
+    border: 1px dashed var(--line);
+    background: #07130a;
+    display: grid; place-items: center;
+    color: var(--muted);
+    font-size: .95rem;
+    overflow: hidden;
+  }
+  .shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  details.guide {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: rgba(7,19,10,.7);
+  }
+  details.guide summary {
+    cursor: pointer;
+    padding: 1rem 1.25rem;
+    font-weight: 700;
+    color: var(--belly);
+    list-style: none;
+    display: flex; justify-content: space-between; gap: 1rem;
+  }
+  details.guide summary::-webkit-details-marker { display: none; }
+  details.guide summary::after { content: "+"; color: var(--eye); font-size: 1.4rem; line-height: 1; }
+  details.guide[open] summary::after { content: "\2212"; }
+  .guide-body { padding: 0 1.25rem 1.25rem; max-width: 42rem; }
+  .guide-body h4 { margin: 1.5rem 0 .4rem; color: var(--lime); }
+  .guide-body ul { padding-left: 1.2rem; margin: .5rem 0; }
+  kbd {
+    font-family: inherit; font-weight: 600; font-size: .9em;
+    background: #10261a; border: 1px solid var(--line); border-bottom-width: 2px;
+    border-radius: 6px; padding: .05em .45em;
+  }
+
+  /* ---------- About ---------- */
+  .about { background: #030603; border-top: 1px solid var(--line); }
+  .about .wrap { display: grid; gap: 2.5rem; grid-template-columns: 1fr; align-items: center; }
+  .about img { width: 100%; max-width: 22rem; border-radius: 50% 50% 46% 54% / 55% 45% 55% 45%; aspect-ratio: 1; object-fit: cover; object-position: 62% 50%; }
+  @media (min-width: 760px) { .about .wrap { grid-template-columns: 22rem 1fr; } }
+
+  footer { padding: 2rem clamp(1.25rem, 5vw, 4rem); color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line); background: #030603; }
+
+  /* ---------- Small screens ---------- */
+  @media (max-width: 720px) {
+    .hero { background-position: 68% top; background-size: auto 62%; }
+    .hero::before { background: linear-gradient(180deg, rgba(4,8,5,0) 25%, var(--night) 62%); }
+    .hero-copy { margin-top: 38vh; padding-bottom: 3rem; }
+    .nav ul { gap: 1rem; font-size: .95rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <nav class="nav" aria-label="Main">
+    <a class="mark" href="#top">FrogMort</a>
+    <ul>
+      <li><a href="#games">Games</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+  </nav>
+  <div class="hero-copy" id="top">
+    <h1>Frog<span>Mort</span></h1>
+    <p class="lede">PC games made by one person. Download them, read the guides, and have a go.</p>
+    <a class="btn" href="#games">See the games</a>
+  </div>
+</header>
+
+<main>
+  <section id="games">
+    <div class="wrap">
+      <h2>Games</h2>
+      <p class="sub">Each game is a free Windows download from GitHub, with a player guide and screenshots below.</p>
+
+      <!-- ===================== GAME 1 ===================== -->
+      <article class="game" id="adventure-park">
+        <div class="game-head">
+          <div>
+            <h3>Adventure Park</h3>
+            <p class="tag">PLACEHOLDER: genre or one-line hook goes here</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="https://github.com/FrogMort-33/Downloads/releases/tag/Adventure-Park-v261016">Download for Windows</a>
+          </div>
+        </div>
+
+        <p class="blurb">PLACEHOLDER: two or three sentences about what the player does, what makes the game different, and what it looks like.</p>
+        <p class="note">Windows may warn you about an unknown publisher, because the app isn't code-signed. Choose "More info", then "Run anyway" if you trust the download.</p>
+
+        <!-- Swap each .shot div for: <div class="shot"><img src="images/adventure-park-1.jpg" alt="Describe the screenshot" loading="lazy"></div> -->
+        <div class="shots">
+          <div class="shot">Screenshot 1</div>
+          <div class="shot">Screenshot 2</div>
+          <div class="shot">Screenshot 3</div>
+        </div>
+
+        <details class="guide">
+          <summary>Player guide</summary>
+          <div class="guide-body">
+            <h4>Controls</h4>
+            <ul>
+              <li><kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> to move</li>
+              <li>Mouse to look or aim</li>
+              <li>PLACEHOLDER: add the rest of your controls</li>
+            </ul>
+            <h4>How to play</h4>
+            <p>PLACEHOLDER: describe the goal, how a round works, and how you win or lose.</p>
+            <h4>Tips</h4>
+            <ul>
+              <li>PLACEHOLDER: a tip for new players</li>
+              <li>PLACEHOLDER: another tip</li>
+            </ul>
+          </div>
+        </details>
+      </article>
+
+      <!-- ===================== GAME 2 ===================== -->
+      <article class="game" id="wireframe-warfare">
+        <div class="game-head">
+          <div>
+            <h3>Wireframe Warfare</h3>
+            <p class="tag">PLACEHOLDER: genre or one-line hook goes here</p>
+          </div>
+          <div class="actions">
+            <span class="btn quiet soon" aria-disabled="true">Download coming soon</span>
+          </div>
+        </div>
+        <p class="blurb">PLACEHOLDER: what the game is about.</p>
+        <div class="shots">
+          <div class="shot">Screenshot 1</div>
+          <div class="shot">Screenshot 2</div>
+          <div class="shot">Screenshot 3</div>
+        </div>
+        <details class="guide">
+          <summary>Player guide</summary>
+          <div class="guide-body">
+            <h4>Controls</h4>
+            <p>PLACEHOLDER</p>
+            <h4>How to play</h4>
+            <p>PLACEHOLDER</p>
+          </div>
+        </details>
+      </article>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <div class="wrap">
+      <img src="images/frog-small.jpg" alt="A red-eyed tree frog gripping a green leaf at night">
+      <div>
+        <h2>About FrogMort</h2>
+        <p>FrogMort is my gaming name from way back, and these are the games I've built myself. PLACEHOLDER: add a line or two about who you are and why you make games.</p>
+        <p>Found a bug or have an idea? PLACEHOLDER: add how people should contact you, for example your GitHub Issues page.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  &copy; 2026 FrogMort. Games are provided as they are, with no warranty.
+</footer>
+
+</body>
+</html>
