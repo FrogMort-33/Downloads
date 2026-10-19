@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adventure Park -- Player's Guide</title>
+<style>
+/* One "park at dusk" look, matching the game: deep green panels, gold titles, grass green, sky blue,
+   the bugs' red. Everything is local -- system fonts only, pictures in images/. */
+:root {
+  --bg: #0f1a12; --panel: #17251a; --line: #2d4432; --fg: #eef3ea; --muted: #a8b9a7;
+  --gold: #ffe06e; --grass: #6fc06a; --sky: #8cc8f0; --bug: #ff6a5a; --pink: #f6a0c0;
+  --body: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --round: "Segoe UI Rounded", "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.65 var(--body); }
+a { color: var(--sky); }
+.layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: 100vh; }
+nav { position: sticky; top: 0; height: 100vh; overflow-y: auto; background: #0a130c;
+      border-right: 1px solid var(--line); padding: 22px 18px; }
+nav .logo { font: 800 24px/1.1 var(--round); color: var(--gold); margin-bottom: 4px; }
+nav .sub { color: var(--muted); font-size: 13px; margin-bottom: 18px; }
+nav ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; counter-reset: s; }
+nav li a { display: block; padding: 6px 10px; border-radius: 8px; color: var(--fg); text-decoration: none; font-size: 14.5px; }
+nav li a::before { counter-increment: s; content: counter(s) ". "; color: var(--muted); }
+nav li a:hover, nav li a:focus-visible { background: #1d3122; outline: none; }
+main { padding: 36px 48px 80px; max-width: 1100px; }
+.hero { position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); }
+.hero img { display: block; width: 100%; }
+.hero .over { padding: 20px 26px 22px; background: var(--panel); border-top: 1px solid var(--line); }
+.hero h1 { margin: 0; font: 800 clamp(30px, 4vw, 46px)/1.1 var(--round); color: var(--gold); }
+.hero p { margin: 6px 0 0; color: var(--muted); max-width: 72ch; }
+section { padding-top: 46px; }
+h2 { font: 800 28px/1.2 var(--round); color: var(--gold); margin: 0 0 6px; }
+h2 small { display: block; font: 400 14px var(--body); color: var(--muted); margin-top: 4px; }
+h3 { font: 700 19px var(--round); color: var(--grass); margin: 28px 0 8px; }
+p, li { max-width: 75ch; }
+figure { margin: 16px 0 22px; }
+figure img { display: block; width: 100%; border-radius: 10px; border: 1px solid var(--line); background: #000; cursor: zoom-in; }
+figcaption { color: var(--muted); font-size: 14px; margin-top: 6px; }
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.pair figure { margin: 0; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin-top: 12px; }
+.cards figure { margin: 0; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0 20px; font-size: 15px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; }
+.tbl { overflow-x: auto; }
+kbd { font: 600 13px Consolas, monospace; background: #22362a; border: 1px solid #4a6b52; border-bottom-width: 3px;
+      border-radius: 5px; padding: 1px 7px; color: var(--fg); white-space: nowrap; }
+.tip { border-left: 4px solid var(--grass); background: #12241a; padding: 10px 16px; border-radius: 0 10px 10px 0;
+       margin: 16px 0; max-width: 80ch; }
+.tip b { color: var(--grass); }
+.warn { border-left-color: var(--bug); background: #2a1514; } .warn b { color: var(--bug); }
+.callouts { counter-reset: c; list-style: none; padding: 0; display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 6px 22px; }
+.callouts li { position: relative; padding-left: 38px; }
+.callouts li::before { counter-increment: c; content: counter(c); position: absolute; left: 0; top: 1px;
+                       width: 26px; height: 26px; border-radius: 50%; background: var(--gold); color: #102010;
+                       font: 700 15px/26px var(--body); text-align: center; }
+.tag { display: inline-block; font: 700 12px var(--body); padding: 1px 8px; border-radius: 10px; border: 1px solid currentColor; }
+.brave { color: var(--bug); } .story { color: var(--sky); } .adv { color: var(--grass); }
+details { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 16px; margin: 14px 0; }
+summary { cursor: pointer; font-weight: 600; color: var(--pink); }
+.lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.88); display: flex; align-items: center;
+            justify-content: center; padding: 24px; cursor: zoom-out; }
+.lightbox[hidden] { display: none; }
+.lightbox img { max-width: 100%; max-height: 100%; border-radius: 10px; }
+footer { margin-top: 60px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-top: 16px; }
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; }
+  nav { position: static; height: auto; }
+  main { padding: 20px 16px 60px; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav aria-label="Sections">
+  <div class="logo">ADVENTURE PARK</div>
+  <div class="sub">Player's Guide</div>
+  <p style="margin:0 0 16px;font-size:14px"><a href="../">&larr; Back to FrogMort</a></p>
+  <ol>
+    <li><a href="#start">Getting started</a></li>
+    <li><a href="#controls">Controls</a></li>
+    <li><a href="#screen">Reading the screen</a></li>
+    <li><a href="#story">The story</a></li>
+    <li><a href="#animals">The animals</a></li>
+    <li><a href="#bark">Barking</a></li>
+    <li><a href="#bling">Bling &amp; dressing up</a></li>
+    <li><a href="#adventures">Adventures</a></li>
+    <li><a href="#treats">Bone treats</a></li>
+    <li><a href="#brave">Brave Dog Adventures</a></li>
+    <li><a href="#medals">Brave medals</a></li>
+    <li><a href="#map">The big map</a></li>
+    <li><a href="#saving">Saving</a></li>
+    <li><a href="#tips">Tips</a></li>
+    <li><a href="#gallery">Picture gallery</a></li>
+  </ol>
+</nav>
+
+<main>
+  <div class="hero">
+    <img src="images/title.png" alt="The Adventure Park start-up screen: the Shepherd and the Collie in a round badge, the title on a red ribbon">
+    <div class="over">
+      <h1>PLAYER'S GUIDE</h1>
+      <p>You're a German Shepherd waking up in a park. Find and wake your four dog friends, meet the monkeys, pigs, sheep and snakes, win bling to wear -- and then take on adventures: lost babies, hungry friends, sleepy little ones, and the nasty bugs that live in the swamp.</p>
+    </div>
+  </div>
+
+  <!-- ===================================================== -->
+  <section id="start">
+    <h2>1. Getting started<small>The start-up screen, your name, and carrying on later</small></h2>
+    <p>Start <b>Adventure Park vYYMMDD.exe</b>. (The first time, Windows may say it doesn't know the app: click <b>More info</b>, then <b>Run anyway</b>.) It runs full screen. The start-up screen shows the Shepherd and the Collie while the camera flies all round the park behind them, with the park's music playing.</p>
+    <ul>
+      <li><b>Press any key</b> to bring up the menu.</li>
+      <li><b>New Adventure</b> asks your name -- type it and press <kbd>Enter</kbd>.</li>
+      <li><b>Continue: <i>your name</i></b> carries on a saved adventure (the newest four are listed, with how far each one got).</li>
+    </ul>
+    <div class="pair">
+      <figure><img src="images/new_adventure.png" alt="The New Adventure name box"><figcaption>A new adventure: type your name.</figcaption></figure>
+      <figure><img src="images/continue_menu.png" alt="The Continue menu with a saved adventure"><figcaption>Next time: carry on where you left off.</figcaption></figure>
+    </div>
+    <p>Then you're in the park -- and the Shepherd's fast asleep. Press <kbd>W</kbd> (or any movement key) to wake her up.</p>
+    <figure><img src="images/wake_up.png" alt="The Shepherd asleep in the red garden, the first quest's message"><figcaption>"Wake up sleepy girl, time to go on an adventure!"</figcaption></figure>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="controls">
+    <h2>2. Controls<small>World of Warcraft style -- press <kbd>Tab</kbd> in the game to see them all</small></h2>
+    <div class="tbl"><table>
+      <tr><th>Key</th><th>Does</th></tr>
+      <tr><td><kbd>W</kbd> <kbd>S</kbd></td><td>Run forward / back up</td></tr>
+      <tr><td><kbd>A</kbd> <kbd>D</kbd></td><td>Turn (strafe while you hold the right mouse button)</td></tr>
+      <tr><td><kbd>Shift</kbd> &middot; <kbd>R</kbd></td><td>Walk instead of run &middot; autorun on / off</td></tr>
+      <tr><td><kbd>Space</kbd></td><td>Jump -- land on anyone asleep to wake them</td></tr>
+      <tr><td>Left drag &middot; Right drag</td><td>Look around &middot; steer with the mouse (both buttons: run forward)</td></tr>
+      <tr><td>Mouse wheel &middot; <b>Wheel click</b></td><td>Zoom &middot; <b>Bark!</b> (the pack joins in)</td></tr>
+      <tr><td><kbd>X</kbd> <kbd>C</kbd> <kbd>Z</kbd></td><td>Sit &middot; stand on hind legs &middot; lie down (stay down and she falls asleep)</td></tr>
+      <tr><td><kbd>T</kbd> &middot; <kbd>F</kbd></td><td>Throw a tennis ball &middot; pick up / drop a ball, food or a bone (catch balls in the air!)</td></tr>
+      <tr><td><kbd>Return</kbd></td><td>Swap which dog you're playing</td></tr>
+      <tr><td><kbd>I</kbd> &middot; <kbd>G</kbd></td><td>Dress up your dog &middot; give an animal something to wear</td></tr>
+      <tr><td><kbd>M</kbd></td><td>The big map</td></tr>
+      <tr><td><kbd>H</kbd> &middot; <kbd>N</kbd></td><td>Show the quest again &middot; the animal panels (all / as tabs <kbd>1</kbd>-<kbd>4</kbd> / off)</td></tr>
+      <tr><td><kbd>J</kbd> &middot; <kbd>K</kbd> &middot; <kbd>Tab</kbd></td><td>Music on / off &middot; skeleton view &middot; show / hide the controls</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>Close the map -- or save and quit</td></tr>
+    </table></div>
+    <figure><img src="images/controls.png" alt="The Tab controls screen, every key in its own box"><figcaption><kbd>Tab</kbd>: every control, in one place.</figcaption></figure>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="screen">
+    <h2>3. Reading the screen<small>Everything on the screen, numbered</small></h2>
+    <figure><img src="images/hud_annotated.png" alt="A gameplay screenshot with the parts of the screen numbered 1 to 9"><figcaption>Mid-adventure: feeding a hungry monkey.</figcaption></figure>
+    <ol class="callouts">
+      <li><b>The map</b> -- the whole park, north up. You're the big arrow; the white wedge is where the camera's looking. Coloured dots are the animals, balls and bling lying about.</li>
+      <li><b>The quest box</b> -- what to do now, with ticks, distances and progress bars. Press <kbd>H</kbd> to see the full message again.</li>
+      <li><b>Who's leading</b> -- the dog you're playing (<kbd>Return</kbd> swaps).</li>
+      <li><b>Treats</b> -- a bone fills in for each adventure. Three, and bones turn up in a garden (see <a href="#treats">Bone treats</a>).</li>
+      <li><b>Brave medals</b> -- won in the Brave Dog Adventures (see <a href="#medals">Brave medals</a>).</li>
+      <li><b>Key tips</b> -- the keys you'll want most, and the frame rate.</li>
+      <li><b>Messages</b> -- little notes about what just happened.</li>
+      <li><b>The animal panels</b> -- what every animal is thinking and doing (<kbd>N</kbd> switches them about).</li>
+      <li><b>The dogs' panel</b> -- what each of your friends is up to.</li>
+    </ol>
+    <div class="tip"><b>Follow the triangles.</b> A bobbing <b style="color:var(--grass)">green triangle</b> marks whoever needs you -- a sleeping friend, a lost baby, a friend in need, food to fetch. A <b style="color:var(--bug)">red triangle</b> marks a nasty bug (or a monkey up to mischief).</div>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="story">
+    <h2>4. The story<small><span class="tag story">27 quests</span> -- one after another, the quest box always says what's next</small></h2>
+    <p>The story takes you all round the park, finding your four friends and meeting the animals.</p>
+    <div class="tbl"><table>
+      <tr><th>Quest</th><th>What you do</th></tr>
+      <tr><td>Wake Up &middot; Go For a Run!</td><td>Wake the Shepherd, then run 200 m.</td></tr>
+      <tr><td>Find Your Friend &middot; Wake Up Your Friend</td><td>Find a friend asleep somewhere (follow the green triangle), then <b>jump on them</b> (<kbd>Space</kbd>) to wake them.</td></tr>
+      <tr><td>Fun with Friends</td><td>A 200 m run with your new friend leading -- and a <b>bling reward</b> for the whole pack.</td></tr>
+      <tr><td>Find Your Tennis Ball</td><td>Find the Collie's ball in the red garden, pick it up (<kbd>F</kbd>) and carry it 25 m.</td></tr>
+      <tr><td>Go for a Swim</td><td>Everyone in the pond, splashing about with the big ball.</td></tr>
+      <tr><td>Gardens</td><td>Visit the red, yellow and blue gardens.</td></tr>
+      <tr><td>Butterflies!</td><td>Run through 10 swarms of butterflies to scatter them.</td></tr>
+      <tr><td>Garden Nap</td><td>Go to the garden it names, lie down (<kbd>Z</kbd>) and fall asleep.</td></tr>
+      <tr><td>Something Smells!</td><td>Follow your nose to a new kind of animal, and meet every one of them by name.</td></tr>
+    </table></div>
+    <p>Then round again with more friends: the <b>Terrier</b>, the <b>Lurcher</b> and the <b>Poodle</b>, and the pigs, sheep, monkeys and snakes.</p>
+    <div class="pair">
+      <figure><img src="images/first_run.png" alt="Running past the pond, the quest box counting metres"><figcaption>Go For a Run! -- the bar fills as you run.</figcaption></figure>
+      <figure><img src="images/find_friend.png" alt="The Collie asleep in the yellow garden under a green triangle"><figcaption>The Collie, asleep under her green triangle. Jump on her!</figcaption></figure>
+    </div>
+    <div class="pair">
+      <figure><img src="images/swim.png" alt="The Shepherd swimming in the pond"><figcaption>Go for a Swim.</figcaption></figure>
+      <figure><img src="images/butterflies.png" alt="Butterflies over the blue garden"><figcaption>Butterflies! -- charge right through them.</figcaption></figure>
+    </div>
+    <figure><img src="images/smell_pigs.png" alt="Following a smell to the pigs' mud wallow"><figcaption>Something Smells! -- it's the pigs.</figcaption></figure>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="animals">
+    <h2>5. The animals<small>Each one has a name, a home, and a mind of its own</small></h2>
+    <h3>Monkeys</h3>
+    <p>Five monkeys, <b>King Monkey</b> (twice the size), and three baby monkeys. They climb their <b>climbing frame</b> in the north-east, swim, chase butterflies -- and get up to mischief: pinching your tennis balls and your bling, then dancing round you and making off to hide it at their stash rock. A monkey up to no good has orange thoughts and a red triangle. Baby monkeys love a ride on anyone's back -- even yours.</p>
+    <div class="pair">
+      <figure><img src="images/monkeys.png" alt="Monkeys on and around the climbing frame"><figcaption>The climbing frame.</figcaption></figure>
+      <figure><img src="images/baby_ride.png" alt="A baby monkey riding on the Collie's back"><figcaption>Bubbles has hitched a ride on the Collie.</figcaption></figure>
+    </div>
+    <h3>Pigs, sheep and snakes</h3>
+    <p>The <b>pigs</b> (and three piglets) roll in the mud in the south-west. The <b>sheep</b> (and three lambs -- and Sooty, the black sheep) graze their field in the south-east. The rainbow <b>snakes</b> (and six babies) live in the rockery north of the forest; they curl up to sleep, smell the flowers and climb trees. Each home has its own tune.</p>
+    <div class="pair">
+      <figure><img src="images/pigs.png" alt="Pigs in the mud wallow"><figcaption>The mud wallow.</figcaption></figure>
+      <figure><img src="images/sheep.png" alt="Sheep in their field"><figcaption>The sheep's field.</figcaption></figure>
+    </div>
+    <figure><img src="images/snakes.png" alt="Rainbow snakes round their rockery"><figcaption>The snakes' rockery.</figcaption></figure>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="bark">
+    <h2>6. Barking<small>Wheel click -- and the whole pack joins in</small></h2>
+    <p>Click the mouse wheel and your dog barks; your friends join in a moment later. Each dog has its own bark. Animals nearby jump and dash away -- and bump into a rattled one and it might drop the ball or bling it's got. Close up, a bark chases off a <a href="#brave">nasty bug</a>.</p>
+    <figure><img src="images/bark.png" alt="Barking at the pigs, who are startled"><figcaption>Woof! The pigs are "startled by a bark!"</figcaption></figure>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="bling">
+    <h2>7. Bling &amp; dressing up<small>Ten kinds, lots of colours, one for the head and one for the neck</small></h2>
+    <p>Finishing the Fun with Friends runs, the smell quests and the first Butterflies quest wins <b>bling</b> for the pack: bows, party hats, woolly beanies, bandanas, collars, bell collars, bow ties, scarves, flower chains -- and pearls, later. Press <kbd>I</kbd> to dress up your dog: turn her round, try things on, and Apply.</p>
+    <p>Press <kbd>G</kbd> beside an animal to give it something to wear. (Snakes can only wear things on their heads.) Watch out for the monkeys -- they'll pinch your bling!</p>
+    <div class="pair">
+      <figure><img src="images/dressing_room.png" alt="The dressing room for the Shepherd"><figcaption><kbd>I</kbd>: the dressing room.</figcaption></figure>
+      <figure><img src="images/give_a_gift.png" alt="The dressing room for a lamb"><figcaption><kbd>G</kbd>: dressing up a lamb.</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="adventures">
+    <h2>8. Adventures<small><span class="tag adv">28 adventures</span> -- once the story's done, a new one every minute</small></h2>
+    <p>After the story, the quest box counts down -- "New adventure in 60 s" -- and then an adventure starts, picked at random from the Adventure Pool.</p>
+    <h3>Lost Babies!</h3>
+    <p>The babies of one kind have wandered off all over the park. Find each one (a green triangle) -- it follows you -- and lead it back to its grown-ups. All home: a party!</p>
+    <figure><img src="images/lost_babies.png" alt="A lost piglet under a green triangle"><figcaption>Nibbles is lost.</figcaption></figure>
+    <h3>Help a Friend!</h3>
+    <p>An animal is cold, sad or wants to feel special. Find them and press <kbd>G</kbd> beside them to give them the right thing to wear (the quest says what helps). Help three friends and you win a surprise...</p>
+    <figure><img src="images/help_friend.png" alt="A cold lamb under a green triangle"><figcaption>Dandelion is cold -- something warm, please.</figcaption></figure>
+    <h3>Can I Run with the Pack?</h3>
+    <p>An animal would love a run with the dogs: go and get them, then run 200 m together (only while they keep up!).</p>
+    <figure><img src="images/run_with_pack.png" alt="A lamb running with the pack"><figcaption>Running with the pack.</figcaption></figure>
+    <h3>Feed a Friend!</h3>
+    <p>An animal is hungry. Some food turns up somewhere in the park (it has a green triangle): pick it up with <kbd>F</kbd>, carry it over and drop it (<kbd>F</kbd>) beside them.</p>
+    <figure><img src="images/feed_friend.png" alt="Fetching an orange for a hungry monkey"><figcaption>An orange for Bongo.</figcaption></figure>
+    <h3>Nap Time!</h3>
+    <p>A baby can't settle. Lie down beside them (<kbd>Z</kbd>) and go to sleep -- they copy you, Brahms' Lullaby plays, and bit by bit their eyes close.</p>
+    <figure><img src="images/nap_time.png" alt="The Shepherd lying beside a piglet, the sleepy bar filling"><figcaption>"Sprout is calming down..."</figcaption></figure>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="treats">
+    <h2>9. Bone treats<small>Every three adventures</small></h2>
+    <p>The bone tracker beside your dog's name fills in a bone for each adventure. When all three are full, <b>bones turn up in a garden</b> -- a different garden each time (the message says which). Run over, pick one up with <kbd>F</kbd> and your dog has a lovely treat: she begs, lies down and chews it up, then spins round with joy.</p>
+    <div class="pair">
+      <figure><img src="images/treats_popup.png" alt="The Treats unlocked! popup"><figcaption>The first time: treats unlocked!</figcaption></figure>
+      <figure><img src="images/bone_treat.png" alt="The Shepherd lying down chewing a bone"><figcaption>Chewing it up.</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="brave">
+    <h2>10. Brave Dog Adventures<small><span class="tag brave">14 adventures</span> -- standing up to the nasty bugs</small></h2>
+    <p>Once a dog has eaten a bone treat, the <b>Brave Dog Adventures</b> unlock and join the others. And something new appears in the forest's north-west corner: <b>the swamp</b> -- murky ground, bubbling puddles, a giant spider web and a heap of brown rocks, <b>the poop pile</b>, where the bugs live. It even has its own creepy music...</p>
+    <figure><img src="images/swamp.png" alt="The swamp: the spider web, the poop pile and the puddles"><figcaption>The swamp: the bugs' home.</figcaption></figure>
+    <h3>The nasty bugs</h3>
+    <p>Spiders, beetles, wasps, mosquitoes and horseflies. Each one has a <b style="color:var(--bug)">red triangle</b>. <b>Get within about 5 m and bark</b> -- each round of barking chases one bug all the way back to its poop pile.</p>
+    <figure><img src="images/bugs.png" alt="The five nasty bugs"><figcaption>The five kinds of bug.</figcaption></figure>
+    <h3>Nasty Bugs Attack!</h3>
+    <p>Five bugs are attacking one of the animals. Find them and bark every bug away.</p>
+    <figure><img src="images/nasty_bugs.png" alt="Bugs attacking a pig, red triangles over each"><figcaption>Pickle is under attack!</figcaption></figure>
+    <h3>Kidnapped by Bugs!</h3>
+    <p>The bugs grab a baby animal and carry it off through the air to their spider web, where they keep on attacking it. Get to the swamp, bark every bug away, and the baby drops free -- then take it home to its family.</p>
+    <div class="pair">
+      <figure><img src="images/kidnapped.png" alt="A lamb being carried off by bugs"><figcaption>Carried off...</figcaption></figure>
+      <figure><img src="images/in_the_web.png" alt="A lamb stuck in the spider web with bugs all round"><figcaption>...and stuck in the web. Bark!</figcaption></figure>
+    </div>
+    <h3>Bug Invasion!</h3>
+    <p>Ten bugs invade part of the park -- the climbing frame, the pond, a garden, the sheep's field or the mud wallow. Chase every last one of them away.</p>
+    <figure><img src="images/bug_invasion.png" alt="Bugs swarming the yellow garden, the pack barking"><figcaption>The yellow garden's been invaded. "Woof! The mosquito ran back to the poop pile!"</figcaption></figure>
+    <div class="tip warn"><b>One bug per bark.</b> Each round of barking chases off the nearest bug -- so keep barking, and keep close.</div>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="medals">
+    <h2>11. Brave medals<small>One for every Brave Dog Adventure</small></h2>
+    <p>Every Brave adventure wins a <b>bronze medal</b>, shown to the left of your dog's name. Three of a kind turn into the next one up: 3 bronze make a <b>silver</b>, 3 silver a <b>gold</b>, 3 gold a <b>bronze star</b>, and 3 bronze stars a <b>paw medal</b> -- the best of all.</p>
+    <figure><img src="images/medal_chart.png" alt="How many adventures make which medals"><figcaption>How the medals add up.</figcaption></figure>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="map">
+    <h2>12. The big map<small>Press <kbd>M</kbd> -- the game carries on underneath</small></h2>
+    <p>The whole park, big. Every place you know about is named with a dotted line round it, and you can watch the dogs, animals, bugs and bones moving about. Places you haven't found yet stay off it -- no spoilers! Press <kbd>M</kbd> or <kbd>Esc</kbd> to close it.</p>
+    <div class="pair">
+      <figure><img src="images/big_map.png" alt="The big map"><figcaption>The big map.</figcaption></figure>
+      <figure><img src="images/big_map_invasion.png" alt="The big map during a bug invasion"><figcaption>During a Bug Invasion -- the bugs are the red dots.</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="saving">
+    <h2>13. Saving<small>Automatic</small></h2>
+    <p>Your adventure saves when you quit (<kbd>Esc</kbd>), after every quest you finish, and every couple of minutes. Everything's kept: how far you've got, the adventures and medals, your bling, what the animals are wearing, bones lying about. (An adventure you were in the middle of starts again from the beginning.)</p>
+    <div class="tip"><b>Where:</b> each player's game is a file in <code>%APPDATA%\Adventure Park\saves</code>, named after them. Copy it to keep a backup.</div>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="tips">
+    <h2>14. Tips</h2>
+    <ul>
+      <li><b>Lost?</b> Press <kbd>H</kbd> for the quest again, or <kbd>M</kbd> for the big map -- and follow the green triangles.</li>
+      <li><b>Jump to wake.</b> Sleeping friends only wake if you land on them.</li>
+      <li><b>Hold the right mouse button</b> and steer with the mouse -- it's the easiest way to run where you're looking.</li>
+      <li><b>Autorun</b> (<kbd>R</kbd>) saves your fingers on the long runs.</li>
+      <li><b>Keep your bling safe.</b> Monkeys pinch it -- bark at a thief and bump into it to make it drop what it took.</li>
+      <li><b>Bugs: get close, then bark.</b> One bug per round of barking.</li>
+      <li><b>Fetch the bones.</b> Eating one is what unlocks the Brave Dog Adventures.</li>
+    </ul>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="gallery">
+    <h2>15. Picture gallery<small>Click any picture to see it big</small></h2>
+    <div class="cards">
+      <figure><img src="images/title.png" alt="Start-up screen"></figure>
+      <figure><img src="images/wake_up.png" alt="Wake up"></figure>
+      <figure><img src="images/first_run.png" alt="First run"></figure>
+      <figure><img src="images/find_friend.png" alt="Find your friend"></figure>
+      <figure><img src="images/swim.png" alt="Swim"></figure>
+      <figure><img src="images/butterflies.png" alt="Butterflies"></figure>
+      <figure><img src="images/smell_pigs.png" alt="A strange smell"></figure>
+      <figure><img src="images/monkeys.png" alt="Monkeys"></figure>
+      <figure><img src="images/baby_ride.png" alt="A baby monkey riding"></figure>
+      <figure><img src="images/pigs.png" alt="Pigs"></figure>
+      <figure><img src="images/sheep.png" alt="Sheep"></figure>
+      <figure><img src="images/snakes.png" alt="Snakes"></figure>
+      <figure><img src="images/bark.png" alt="Barking"></figure>
+      <figure><img src="images/dressing_room.png" alt="Dressing room"></figure>
+      <figure><img src="images/lost_babies.png" alt="Lost babies"></figure>
+      <figure><img src="images/help_friend.png" alt="Help a friend"></figure>
+      <figure><img src="images/run_with_pack.png" alt="Run with the pack"></figure>
+      <figure><img src="images/feed_friend.png" alt="Feed a friend"></figure>
+      <figure><img src="images/nap_time.png" alt="Nap time"></figure>
+      <figure><img src="images/bone_beg.png" alt="A bone!"></figure>
+      <figure><img src="images/bone_treat.png" alt="Bone treat"></figure>
+      <figure><img src="images/swamp.png" alt="The swamp"></figure>
+      <figure><img src="images/nasty_bugs.png" alt="Nasty bugs"></figure>
+      <figure><img src="images/kidnapped.png" alt="Kidnapped"></figure>
+      <figure><img src="images/in_the_web.png" alt="In the web"></figure>
+      <figure><img src="images/bug_invasion.png" alt="Bug invasion"></figure>
+      <figure><img src="images/big_map.png" alt="The big map"></figure>
+    </div>
+  </section>
+
+  <footer>Adventure Park &middot; Lazerian &middot; Player's Guide. Every picture taken from the game itself.</footer>
+</main>
+</div>
+
+<div class="lightbox" id="lightbox" hidden><img alt=""></div>
+<script>
+// click any picture to see it full size; click again (or Esc) to close
+const box = document.getElementById("lightbox"), big = box.querySelector("img");
+document.querySelectorAll("main figure img").forEach(img => {
+  img.addEventListener("click", () => { big.src = img.src; big.alt = img.alt; box.hidden = false; });
+});
+box.addEventListener("click", () => { box.hidden = true; });
+document.addEventListener("keydown", e => { if (e.key === "Escape") box.hidden = true; });
+</script>
+</body>
+</html>
