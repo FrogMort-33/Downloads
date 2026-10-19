@@ -142,6 +142,7 @@
     font-size: .95rem;
     overflow: hidden;
   }
+  .shot:has(img) { border-style: solid; }
   .shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
   details.guide {
@@ -225,11 +226,10 @@
         <p class="blurb">PLACEHOLDER: two or three sentences about what the player does, what makes the game different, and what it looks like.</p>
         <p class="note">Windows may warn you about an unknown publisher, because the app isn't code-signed. Choose "More info", then "Run anyway" if you trust the download.</p>
 
-        <!-- Swap each .shot div for: <div class="shot"><img src="images/adventure-park-1.jpg" alt="Describe the screenshot" loading="lazy"></div> -->
         <div class="shots">
-          <div class="shot">Screenshot 1</div>
-          <div class="shot">Screenshot 2</div>
-          <div class="shot">Screenshot 3</div>
+          <div class="shot"><img src="images/adventure-park-1.jpg" alt="Adventure Park title screen with two dogs, a pond and ducks, asking for your name" loading="lazy"></div>
+          <div class="shot"><img src="images/adventure-park-2.jpg" alt="A German Shepherd leading a pack of dogs through a flower meadow, scattering butterflies" loading="lazy"></div>
+          <div class="shot"><img src="images/adventure-park-3.jpg" alt="The Help a Friend quest: dogs gather around a monkey called Kiki who is cold" loading="lazy"></div>
         </div>
 
         <details class="guide">
