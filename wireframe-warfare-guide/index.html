@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wireframe Warfare -- Player's Guide</title>
+<style>
+/* One dark "arena" look, matching the game: navy sky, red grid, wave yellow,
+   demon purple, pickup green. Everything is local -- system fonts only. */
+:root {
+  --bg: #0a0b1a; --panel: #12142a; --line: #2b2f52; --fg: #e6e8f4; --muted: #9ea3c4;
+  --wave: #ffd23c; --grid: #ff5a3c; --demon: #c86aff; --green: #5cf07c; --cyan: #78dcff;
+  --hard: #ff6e5a;
+  --mono: Consolas, "Cascadia Mono", "Courier New", monospace;
+  --body: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.65 var(--body); }
+a { color: var(--cyan); }
+.layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: 100vh; }
+nav { position: sticky; top: 0; height: 100vh; overflow-y: auto; background: #07081a;
+      border-right: 1px solid var(--line); padding: 22px 18px; }
+nav .logo { font: 700 22px/1.1 var(--mono); color: var(--wave); letter-spacing: .04em; margin-bottom: 4px; }
+nav .sub { color: var(--muted); font-size: 13px; margin-bottom: 18px; }
+nav ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; counter-reset: s; }
+nav li a { display: block; padding: 6px 10px; border-radius: 6px; color: var(--fg); text-decoration: none;
+           font-size: 14.5px; }
+nav li a::before { counter-increment: s; content: counter(s) ". "; color: var(--muted); font-family: var(--mono); }
+nav li a:hover, nav li a:focus-visible { background: #1a1d3a; outline: none; }
+main { padding: 36px 48px 80px; max-width: 1100px; }
+.hero { position: relative; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+.hero img { display: block; width: 100%; }
+.hero .over { padding: 20px 26px 22px; background: var(--panel); border-top: 1px solid var(--line); }
+.hero h1 { margin: 0; font: 700 clamp(28px, 4vw, 44px)/1.1 var(--mono); color: var(--wave); letter-spacing: .03em; }
+.hero p { margin: 6px 0 0; color: var(--muted); max-width: 70ch; }
+section { padding-top: 46px; }
+h2 { font: 700 26px/1.2 var(--mono); color: var(--wave); margin: 0 0 6px; letter-spacing: .02em; }
+h2 small { display: block; font: 400 14px var(--body); color: var(--muted); letter-spacing: 0; margin-top: 4px; }
+h3 { font: 700 18px var(--mono); color: var(--cyan); margin: 28px 0 8px; }
+p, li { max-width: 75ch; }
+figure { margin: 16px 0 22px; }
+figure img { display: block; width: 100%; border-radius: 8px; border: 1px solid var(--line); background: #000; }
+figcaption { color: var(--muted); font-size: 14px; margin-top: 6px; }
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.pair figure { margin: 0; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-top: 12px; }
+.cards figure { margin: 0; }
+.cards img { cursor: zoom-in; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0 20px; font-size: 15px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.tbl { overflow-x: auto; }
+kbd { font: 600 13px var(--mono); background: #1d2040; border: 1px solid #3a3f6e; border-bottom-width: 3px;
+      border-radius: 5px; padding: 1px 7px; color: var(--fg); white-space: nowrap; }
+.tip { border-left: 4px solid var(--green); background: #0f1d1a; padding: 10px 16px; border-radius: 0 8px 8px 0;
+       margin: 16px 0; max-width: 80ch; }
+.warn { border-left-color: var(--hard); background: #221214; }
+.tip b { color: var(--green); } .warn b { color: var(--hard); }
+.callouts { counter-reset: c; list-style: none; padding: 0; display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 6px 22px; }
+.callouts li { position: relative; padding-left: 38px; }
+.callouts li::before { counter-increment: c; content: counter(c); position: absolute; left: 0; top: 1px;
+                       width: 26px; height: 26px; border-radius: 50%; background: var(--wave); color: #0a0b1a;
+                       font: 700 15px/26px var(--mono); text-align: center; }
+.tag { display: inline-block; font: 700 12px var(--mono); padding: 1px 8px; border-radius: 4px;
+       border: 1px solid currentColor; }
+.easy { color: var(--cyan); } .hardc { color: var(--hard); } .good { color: var(--green); }
+details { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px 16px; margin: 14px 0; }
+summary { cursor: pointer; font-weight: 600; color: var(--demon); }
+.lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.88); display: flex; align-items: center;
+            justify-content: center; padding: 24px; cursor: zoom-out; }
+.lightbox[hidden] { display: none; }
+.lightbox img { max-width: 100%; max-height: 100%; border-radius: 8px; }
+footer { margin-top: 60px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-top: 16px; }
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; }
+  nav { position: static; height: auto; }
+  main { padding: 20px 16px 60px; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav aria-label="Sections">
+  <div class="logo">WIREFRAME WARFARE</div>
+  <div class="sub">Player's Guide</div>
+  <p style="margin:0 0 16px;font-size:14px"><a href="../">&larr; Back to FrogMort</a></p>
+  <ol>
+    <li><a href="#start">Getting started</a></li>
+    <li><a href="#controls">Controls</a></li>
+    <li><a href="#hud">Reading the screen</a></li>
+    <li><a href="#wave">How a wave plays</a></li>
+    <li><a href="#enemies">Enemies</a></li>
+    <li><a href="#demons">Demons</a></li>
+    <li><a href="#events">Wave events</a></li>
+    <li><a href="#hazards">Hazards</a></li>
+    <li><a href="#pickups">Health &amp; care packages</a></li>
+    <li><a href="#allies">Allies (Team Green)</a></li>
+    <li><a href="#shield">Your shield</a></li>
+    <li><a href="#scoring">Scoring</a></li>
+    <li><a href="#settings">Settings &amp; difficulty</a></li>
+    <li><a href="#tips">Tips</a></li>
+    <li><a href="#bestiary">Field guide (all cards)</a></li>
+  </ol>
+</nav>
+
+<main>
+  <div class="hero">
+    <img src="images/title.png" alt="The Wireframe Warfare title screen with the showcase card and volume fader">
+    <div class="over">
+      <h1>PLAYER'S GUIDE</h1>
+      <p>A retro wireframe arena shooter. Shapes rain in, demons rise, the floor fills with hazards -- and you've got a handful of bullets and a hop. This guide covers everything you need to survive.</p>
+    </div>
+  </div>
+
+  <!-- ===================================================== -->
+  <section id="start">
+    <h2>1. Getting started<small>The title screen, and the showcase</small></h2>
+    <p>Start the game (the <b>.exe</b>, or <code>Wireframe Warfare 9-28 .py</code> with Python). You land on the title screen, with an empty arena gliding past behind it.</p>
+    <ul>
+      <li><b>The showcase card</b> in the middle introduces every enemy, hazard, pickup and ally in turn -- with its stats and its own sound. Click the <b>&lt; &gt;</b> arrows on its sides to browse, and the <b>STYLE</b> tab above it to switch between the ID CARD and TERMINAL looks.</li>
+      <li><b>The VOL fader</b> on the right sets the game's volume -- drag it, roll the mouse wheel over it, or click the speaker to mute. It starts at 50% and is remembered.</li>
+      <li><b>Press any key</b> (or click anywhere else) to play.</li>
+    </ul>
+    <div class="tip"><b>Your settings are saved</b> in <code>wireframe_warfare_settings.json</code>, next to the game. Copy the game somewhere new and it starts fresh.</div>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="controls">
+    <h2>2. Controls</h2>
+    <div class="tbl"><table>
+      <tr><th>Key</th><th>Does</th></tr>
+      <tr><td><kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd></td><td>Move</td></tr>
+      <tr><td>Mouse</td><td>Look / aim</td></tr>
+      <tr><td>Hold <kbd>Left click</kbd></td><td>Fire</td></tr>
+      <tr><td><kbd>Right click</kbd></td><td>Shield <b>on / off</b> (once you have shield seconds banked)</td></tr>
+      <tr><td><kbd>Space</kbd></td><td>Hop -- over hazards, over tanks, over a lunging zergling</td></tr>
+      <tr><td><kbd>Tab</kbd></td><td>Settings (pauses the game)</td></tr>
+      <tr><td><kbd>P</kbd></td><td>Pause / resume</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>Release / grab the mouse</td></tr>
+      <tr><td><kbd>R</kbd></td><td>Restart after game over</td></tr>
+      <tr><td><kbd>Q</kbd></td><td>Quit</td></tr>
+    </table></div>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="hud">
+    <h2>3. Reading the screen<small>Everything on the HUD, numbered</small></h2>
+    <figure>
+      <img src="images/hud_annotated.png" alt="A gameplay screenshot with the HUD parts numbered 1 to 12">
+      <figcaption>Wave 1, mid-fight.</figcaption>
+    </figure>
+    <ol class="callouts">
+      <li><b>Radar</b> -- you're the triangle in the middle; each enemy shows as its own little symbol, pickups in green, missiles as dashes.</li>
+      <li><b>Wave time</b> (beat it under 3:00 for a speed bonus) and how long you've <b>survived</b> in all.</li>
+      <li><b>Wave panel</b> -- the invasion wave, and the <b>DEMON SUMMONING</b> bar filling with your kills. Top right: your difficulty, <span class="tag easy">EASY</span> or <span class="tag hardc">HARD</span>.</li>
+      <li><b>Enemy spawns</b> -- one circle per enemy slot: solid while it's out there, refilling like a clock while it respawns.</li>
+      <li><b>Score</b> and this wave's <b>accuracy</b>.</li>
+      <li><b>Supplies</b> -- when the next health cube or care package drop is coming, and which care packages you've unlocked.</li>
+      <li><b>Events</b> -- which wave events you've met so far.</li>
+      <li><b>Damage Control</b> -- what's hurt you this wave, melee and ranged.</li>
+      <li><b>Health</b> (left arc) and <b>shield</b> seconds (right arc, when you have some).</li>
+      <li><b>Shots</b> -- how many bullets you can have in the air at once, and how many are ready.</li>
+      <li><b>Controls</b> reminder.</li>
+      <li><b>Crosshair</b>. Each enemy's health blocks float above it.</li>
+    </ol>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="wave">
+    <h2>4. How a wave plays<small>The same rhythm every time</small></h2>
+    <h3>1 -- The briefing card</h3>
+    <p>Every wave opens with its <b>briefing card</b> while the game holds still: the event it opens with, how many kills summon its demons, how many demons, the most enemies at once, the respawn timer, your bullets, and what's new. Green changes help you, red ones don't.</p>
+    <figure><img src="images/briefing_wave1.png" alt="The wave 1 briefing card over an empty arena"><figcaption>Wave 1's briefing -- the arena is empty until the card closes.</figcaption></figure>
+
+    <h3>2 -- The event opens</h3>
+    <p>When the card closes, the wave's <b>event</b> starts (see <a href="#events">Wave events</a>). Wave 1 always opens with <b>TRAINING</b>: one of each basic shape zones in, lined up as still targets. Shoot them all.</p>
+    <div class="pair">
+      <figure><img src="images/training_zone_in.png" alt="Eight particle fields collapsing as the training targets zone in"><figcaption>Enemies <b>zone in</b> -- a field of streaks collapses, and the shape appears.</figcaption></figure>
+      <figure><img src="images/training_row.png" alt="The 8 training targets in a row"><figcaption>The TRAINING row: the 8 basic shapes.</figcaption></figure>
+    </div>
+
+    <h3>3 -- The hunt</h3>
+    <p>Then the normal fight: enemies spawn, zone in, and come for you. Every kill fills the <b>DEMON SUMMONING</b> bar (23 kills in wave 1, one more each wave, up to 32). Watch for the zone-in streaks -- they show you where the next enemy is about to appear. While an enemy is still zoning in it can't be hit.</p>
+    <figure><img src="images/enemy_zone_in.png" alt="An enemy zoning in out of a field of streaks"><figcaption>An enemy zoning in. The cake message means the arena was clear for a moment -- a health cube drops.</figcaption></figure>
+
+    <h3>4 -- Demons summoned, then the demon fight</h3>
+    <p>When the bar fills, the demons are summoned. No more enemies spawn -- <b>clear the arena</b> and the demons arrive (see <a href="#demons">Demons</a>).</p>
+
+    <h3>5 -- The wave report and the breather</h3>
+    <p>Beat the last demon and you get a breather: the <b>WAVE REPORT</b> scores the wave you just won, you earn <b>+1 bullet</b> for good, and sometimes a new care package unlocks. Then the next wave's briefing card, and round it goes.</p>
+    <div class="pair">
+      <figure><img src="images/wave_report.png" alt="The wave report"><figcaption>The wave report, during the breather.</figcaption></figure>
+      <figure><img src="images/briefing_wave2.png" alt="The wave 2 briefing"><figcaption>Then wave 2's briefing -- opening with BLITZKRIEG.</figcaption></figure>
+    </div>
+
+    <h3>The waves at a glance</h3>
+    <div class="tbl"><table>
+      <tr><th>Wave</th><th>Opens with</th><th class="num">Kills to summon</th><th class="num">Demons</th><th class="num">Max enemies</th><th>New this wave</th></tr>
+      <tr><td>1</td><td>TRAINING</td><td class="num">23</td><td class="num">1</td><td class="num">8</td><td>the 8 basic shapes</td></tr>
+      <tr><td>2</td><td>BLITZKRIEG</td><td class="num">24</td><td class="num">2</td><td class="num">9</td><td>tanks join the spawns; care package: Power Up</td></tr>
+      <tr><td>3</td><td>ZERG</td><td class="num">25</td><td class="num">3</td><td class="num">10</td><td>mini zergs (once you beat it)</td></tr>
+      <tr><td>4</td><td>CARPET BOMBING</td><td class="num">26</td><td class="num">4</td><td class="num">11</td><td>mini carpet bombings; care package: Shields</td></tr>
+      <tr><td>5</td><td>TURRET</td><td class="num">27</td><td class="num">5</td><td class="num">12</td><td>turrets join the spawns; Ally Zergling</td></tr>
+      <tr><td>6</td><td>BLITZKRIEG</td><td class="num">28</td><td class="num">6</td><td class="num">13</td><td>Twin Shot</td></tr>
+      <tr><td>7</td><td>ZERG</td><td class="num">29</td><td class="num">6</td><td class="num">14</td><td>Ally Turret</td></tr>
+      <tr><td>8</td><td>CARPET BOMBING</td><td class="num">30</td><td class="num">6</td><td class="num">15</td><td>Ally Tank</td></tr>
+      <tr><td>9</td><td>TURRET</td><td class="num">31</td><td class="num">6</td><td class="num">16</td><td></td></tr>
+      <tr><td>10+</td><td>round and round</td><td class="num">32</td><td class="num">6</td><td class="num">16</td><td>the ??? care package...</td></tr>
+    </table></div>
+    <p>The respawn timer also drops a second each wave: 20 s in wave 1, down to 5 s.</p>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="enemies">
+    <h2>5. Enemies<small>The more sides, the slower, tougher and harder-hitting</small></h2>
+    <p>The <b>basic shapes</b> glide down from the sky and bounce toward you -- every bounce makes them a bit faster and gives them +1 HP, so kill them early. If you keep your distance they charge up and fire a missile at you instead.</p>
+    <div class="tbl"><table>
+      <tr><th>Shape</th><th class="num">Sides</th><th>Character</th></tr>
+      <tr><td>Cone</td><td class="num">2</td><td>Fastest thing in the arena, weak alone</td></tr>
+      <tr><td>Tetrahedron</td><td class="num">4</td><td>Nimble, a bit more bite</td></tr>
+      <tr><td>Pyramid</td><td class="num">5</td><td>Balanced</td></tr>
+      <tr><td>Cube</td><td class="num">6</td><td>The all-rounder</td></tr>
+      <tr><td>Octahedron</td><td class="num">8</td><td>Tougher, slower, hits back</td></tr>
+      <tr><td>Octagonal prism</td><td class="num">10</td><td>Heavy hitter</td></tr>
+      <tr><td>Dodecahedron (the d12)</td><td class="num">12</td><td>Slow and heavy</td></tr>
+      <tr><td>Sphere</td><td class="num">32</td><td>The toughest, slowest, hardest-hitting shape</td></tr>
+    </table></div>
+    <div class="pair">
+      <figure><img src="images/cards/cone.png" alt="Cone ID card"><figcaption>Every enemy has a card on the title screen with its real stats.</figcaption></figure>
+      <figure><img src="images/cards/sphere.png" alt="Sphere ID card"><figcaption>The sphere: kill it at range.</figcaption></figure>
+    </div>
+    <h3>Tanks</h3>
+    <p>Arrive with the first <b>BLITZKRIEG</b>. They never chase you -- they tear across your front on fast strafing runs, shelling you, and they're solid: they block you and ram you. Hop over them. A tank that drives over a hazard either crushes it or <b>kicks it</b> (it flies off glowing orange and lands somewhere else).</p>
+    <h3>Turrets</h3>
+    <p>Arrive with the first <b>TURRET</b> event. Planted in the floor; each charges its laser (watch the meter under its health -- it flashes white just before it fires) and fires a beam that never misses. Only 1 damage, but take them out fast.</p>
+    <div class="pair">
+      <figure><img src="images/cards/tank.png" alt="Tank ID card"><figcaption>The tank.</figcaption></figure>
+      <figure><img src="images/cards/turret.png" alt="Turret ID card"><figcaption>The turret.</figcaption></figure>
+    </div>
+    <h3>Mega enemies</h3>
+    <p>A tank or zergling that eats a <b>Power Up</b> or <b>Twin Shot</b> becomes a <b>mega</b>: twice the size, 10x the HP, faster, hitting harder -- drawn in heavy double "tube" lines so you can spot it. Don't leave care packages lying about for them.</p>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="demons">
+    <h2>6. Demons<small>The end of every wave</small></h2>
+    <p>Once the summoning bar is full and the arena is clear, the demons <b>zone in</b> -- a huge burst of streaks over two seconds shows exactly where each one will be. Then they hover, drift after you, and fire cross-shaped missile volleys. The more you hurt one, the angrier it gets: faster and firing more often. Wave N brings N demons (up to 6). When one dies it scatters big <b>boss hazard</b> pyramids.</p>
+    <div class="pair">
+      <figure><img src="images/demon_zone_in.png" alt="A demon zoning in out of a wide burst of streaks"><figcaption>A demon zoning in -- you can't hurt it until it's here.</figcaption></figure>
+      <figure><img src="images/demon_fight.png" alt="A demon drawn in heavy lines, mid-fight"><figcaption>The demon fight. The walls take on the demons' shifting colours.</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="events">
+    <h2>7. Wave events<small>Each wave opens with one, in turn</small></h2>
+    <p>An <b>event banner</b> under the wave panel counts each event down.</p>
+
+    <h3>BLITZKRIEG</h3>
+    <p>Every enemy slot rolls in as a tank at once. From then on tanks join the random spawns.</p>
+    <figure><img src="images/blitzkrieg.png" alt="A Blitzkrieg: tanks rolling in"><figcaption>BLITZKRIEG.</figcaption></figure>
+
+    <h3>ZERG</h3>
+    <p>Every hazard on the ground grows legs -- at least 20 zerglings. They're sneaky: they glow orange and <b>burrow under the floor</b>, tunnel to the walls and wait there. You can see them dimly down there (a ring on the floor marks each one) but you <b>can't hit them</b> -- until their surge comes. The swarm surges in <b>3 waves</b>: each wave bursts up out of the floor and rushes you in short bursts. Shoot half of the swarm and the rest give up and scatter. A zergling that reaches you bites once and is spent.</p>
+    <div class="pair">
+      <figure><img src="images/zerg_burrowed.png" alt="Zerglings burrowed under the floor"><figcaption>Burrowed: dim under the floor, out of reach.</figcaption></figure>
+      <figure><img src="images/zerg_surge.png" alt="A surge of zerglings bursting up"><figcaption>A surge bursts up -- now you can shoot them.</figcaption></figure>
+    </div>
+    <figure><img src="images/zerg_burrow_strip.png" alt="Three moments of a ZERG: sinking, underground, surfacing"><figcaption>Waking and sinking, gathering underground, the first surge surfacing.</figcaption></figure>
+    <div class="tip warn"><b>Watch your stockpile.</b> Zerglings heading for the wall veer off to eat any care package within reach -- even from under the floor. A Power Up turns one into a mega zergling that stays to fight after the rush.</div>
+
+    <h3>CARPET BOMBING</h3>
+    <p>No other enemies -- just an air strike: <b>3 runs</b>, each marking <b>4 zones</b> on the floor for 2 seconds, then 5 seconds of bombs. <b>The markings vanish the moment the bombs start falling</b> -- memorise where they were! Bombs hurt you, wear down your allies, and flatten hazards and pickups. Each run ends leaving <b>2 bomb craters</b>: rings of small pyramid hazards, glowing orange until the whole event is over.</p>
+    <div class="pair">
+      <figure><img src="images/carpet_warning.png" alt="Carpet bombing zones marked on the floor"><figcaption>The warning: zones marked.</figcaption></figure>
+      <figure><img src="images/carpet_rain.png" alt="Bombs falling, markings gone"><figcaption>Bombs falling -- the markings are gone.</figcaption></figure>
+    </div>
+    <div class="pair">
+      <figure><img src="images/crater.png" alt="A fresh bomb crater glowing orange"><figcaption>A fresh crater, hot and orange.</figcaption></figure>
+      <figure><img src="images/crater_cooled.png" alt="A cooled crater in hazard red"><figcaption>Cooled to red once the event is over -- an ordinary hazard now.</figcaption></figure>
+    </div>
+
+    <h3>TURRET</h3>
+    <p>8 turrets planted round the field at once. From then on turrets join the random spawns.</p>
+    <figure><img src="images/turrets.png" alt="Turrets planted round the field firing lasers"><figcaption>TURRET -- the lightning lines are their laser beams.</figcaption></figure>
+
+    <h3>Mini events</h3>
+    <p>Once you've met an event, a smaller version can turn up at random in place of an enemy:</p>
+    <ul>
+      <li><b>Mini zerg</b> -- 8 hazards wake up and rush you in one go (if the floor is short, extra hazards rain down first). Beating the whole swarm counts as one kill.</li>
+      <li><b>Mini carpet bombing</b> -- one run with a 3-2-1 countdown.</li>
+      <li><b>Leave 4 or more care packages lying around</b> and a mini zerg is forced on you: "YOUR STOCKPILE IS ATTRACTING ATTENTION" (7 or more: a 12-strong one).</li>
+    </ul>
+    <p>After any carpet bombing there's a 60-second break before another can come.</p>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="hazards">
+    <h2>8. Hazards<small>The floor gets more dangerous the longer you fight</small></h2>
+    <p>Every kill drops a <b>red hazard cube</b> that sticks in the floor. Standing on one hurts. They block you on foot -- <kbd>Space</kbd> hops you over.</p>
+    <div class="tbl"><table>
+      <tr><th>Hazard</th><th>From</th><th>Notes</th></tr>
+      <tr><td>Hazard cube</td><td>every enemy kill</td><td>small; becomes a <b>mini zergling</b> in a ZERG</td></tr>
+      <tr><td>Boss hazard</td><td>a dying demon</td><td>big pyramids, much nastier, a big hop to clear; becomes a <b>maxi zergling</b></td></tr>
+      <tr><td>Crater hazard</td><td>carpet bombing craters</td><td>a ring of small pyramids with a gap to walk through; maxi zerglings too</td></tr>
+    </table></div>
+    <div class="pair">
+      <figure><img src="images/cards/hazard.png" alt="Hazard cube card"><figcaption>The hazard cube.</figcaption></figure>
+      <figure><img src="images/cards/boss_hazard.png" alt="Boss hazard card"><figcaption>The boss hazard.</figcaption></figure>
+    </div>
+    <div class="tip"><b>Tanks clear hazards</b> -- driving over one crushes it, or kicks it somewhere else (it flies glowing orange).</div>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="pickups">
+    <h2>9. Health &amp; care packages<small>Green means good</small></h2>
+    <h3>Health cubes</h3>
+    <p>Whenever the arena is clear of enemies, a <b>health cube</b> drops ("No current enemies. Have some Cake!") -- then another every few seconds while it stays clear. A green rain column appears first, then the cube falls from high above through it. Its label shows how much it heals. It slowly drifts upward, so grab it before it floats out of reach (shoot it to knock it back down). You can't pick one up at full health.</p>
+    <figure><img src="images/drop_health.png" alt="A health cube's rain column, then the cube falling through it"><figcaption>A health cube arriving: rain first, then the cube.</figcaption></figure>
+
+    <h3>Care packages</h3>
+    <p>After your first demon wave, a <b>resupply drop</b> arrives every 30 seconds, down a beam of light. Drops (and health cubes) always land on clear floor, away from hazards and out of any bombing zone -- though a new hazard can still turn up next to one later. You unlock a new item every so often:</p>
+    <div class="tbl"><table>
+      <tr><th>Unlocks after</th><th>Item</th><th>What it does</th></tr>
+      <tr><td>demon wave 1</td><td>Power Up</td><td>x2 bullets in the air for 15 s -- and on Hard, your full bullet range back</td></tr>
+      <tr><td>demon wave 3</td><td>Shields</td><td>2.5-7.5 seconds of shield for your bank (see <a href="#shield">Your shield</a>)</td></tr>
+      <tr><td>demon wave 4</td><td>Ally Zergling</td><td>a pack of 3 green zerglings that rush your enemies (on Hard, 2 -- and never more than 2 at once)</td></tr>
+      <tr><td>demon wave 5</td><td>Twin Shot</td><td>every shot fires a pair, for 15 s -- and on Hard, your full bullet range back</td></tr>
+      <tr><td>demon wave 6</td><td>Ally Turret</td><td>a green laser turret near you</td></tr>
+      <tr><td>demon wave 7</td><td>Ally Tank</td><td>a green tank on your side</td></tr>
+      <tr><td>demon wave 9</td><td>???</td><td>find out for yourself...</td></tr>
+    </table></div>
+    <figure><img src="images/drop_care_package.png" alt="A care package dropping down its beam column"><figcaption>A care package dropping in. Nothing can take it until it's down.</figcaption></figure>
+    <div class="pair">
+      <figure><img src="images/cards/power_up.png" alt="Power Up card"><figcaption>Power Up.</figcaption></figure>
+      <figure><img src="images/cards/twin_shot_pack.png" alt="Twin Shot card"><figcaption>Twin Shot.</figcaption></figure>
+    </div>
+    <div class="tip warn"><b>Enemies eat them too.</b> A tank or zergling that reaches a Power Up or Twin Shot becomes a mega enemy. One that eats a Shields pack can't handle it and explodes (your kill). Up to 3 of each item wait on the field; then that item's drops are skipped.</div>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="allies">
+    <h2>10. Allies (Team Green)<small>Green things are on your side</small></h2>
+    <p>Allies come from care packages. They fight on their own, and their kills fill the summoning bar and earn "Team Green" points shown under your score. They can eat care packages too -- a Power Up gives an ally tank multi-shot, a Shields pack repairs it. Careful: carpet bombs hurt them.</p>
+    <div class="cards">
+      <figure><img src="images/cards/ally_zergling.png" alt="Ally Zergling card"></figure>
+      <figure><img src="images/cards/ally_turret.png" alt="Ally Turret card"></figure>
+      <figure><img src="images/cards/ally_tank.png" alt="Ally Tank card"></figure>
+    </div>
+    <details><summary>Spoiler: a secret ending</summary>
+      <p>Beat a whole demon wave <b>without landing a single shot on a demon</b> -- let your allies do it -- and Team Green takes over. Hints appear once you've unlocked the last care package.</p>
+    </details>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="shield">
+    <h2>11. Your shield<small>Banked seconds, switched on when you need it</small></h2>
+    <p>Shields packs add <b>seconds</b> to your shield bank (up to 15). <kbd>Right click</kbd> switches the shield on: it blocks <b>75%</b> of every hit while the seconds count down. Right click again to switch it off and keep what's left. The blue frame round the screen and "SHIELD ON" tell you it's up.</p>
+    <figure><img src="images/shield_on.png" alt="The shield raised: blue frame, SHIELD ON"><figcaption>Shield on.</figcaption></figure>
+    <div class="tip"><b>Save it for the big moments</b> -- a Blitzkrieg, a zerg surge, a demon volley.</div>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="scoring">
+    <h2>12. Scoring<small>Kill fast, kill accurately, stay healthy</small></h2>
+    <p>Each kill scores 10 points (5 per zergling, 250 per demon). But at the end of a demon wave the <b>WAVE REPORT</b> works out what you actually bank for the wave:</p>
+    <ul>
+      <li>your kill points <b>x your accuracy</b> that wave (hits / shots -- shots into pickups don't count either way, and a twin pair counts as one shot);</li>
+      <li><b>+10</b> for every second under 3:00;</li>
+      <li><b>+5</b> for every % of health left;</li>
+      <li>plus Team Green's points, untouched.</li>
+    </ul>
+    <p>On <span class="tag hardc">HARD</span> your kill points count x1.5.</p>
+    <figure><img src="images/game_over.png" alt="Game over with the final damage control report"><figcaption>Game over shows your final score and the <b>FINAL DAMAGE CONTROL</b> report: everything that hurt you, all run. <kbd>R</kbd> to go again.</figcaption></figure>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="settings">
+    <h2>13. Settings &amp; difficulty<small>Tab opens them -- the game pauses</small></h2>
+    <figure><img src="images/settings.png" alt="The Tab settings panel and the EASY vs HARD panel"><figcaption>Tab settings, with the EASY vs HARD comparison beside it.</figcaption></figure>
+    <div class="tbl"><table>
+      <tr><th>Key</th><th>Setting</th></tr>
+      <tr><td><kbd>1</kbd></td><td>Damage &amp; heal reports in the corner -- on / off</td></tr>
+      <tr><td><kbd>2</kbd></td><td>Enemy promotion messages -- on / off</td></tr>
+      <tr><td><kbd>3</kbd></td><td>Damage Control box (lower left) -- on / off</td></tr>
+      <tr><td><kbd>4</kbd></td><td>Health display -- Big numbers / Cockpit arcs / Twin bars</td></tr>
+      <tr><td><kbd>5</kbd></td><td>How long the wave briefing card shows -- 10, 7, 5, 3 or 1 seconds</td></tr>
+      <tr><td><kbd>6</kbd></td><td><b>Difficulty -- Easy / Hard</b></td></tr>
+      <tr><td><kbd>&larr;</kbd> <kbd>&rarr;</kbd></td><td>Volume</td></tr>
+    </table></div>
+    <h3>Easy vs Hard</h3>
+    <p><span class="tag easy">EASY</span> is the default. <span class="tag hardc">HARD</span> changes these (the panel beside Settings always shows the live values):</p>
+    <div class="tbl"><table>
+      <tr><th></th><th class="num">Easy</th><th class="num">Hard</th></tr>
+      <tr><td>Your bullets' range</td><td class="num">45</td><td class="num hardc">22.5 (45 with a Power Up or Twin Shot)</td></tr>
+      <tr><td>Allies (tank / turret / demon)</td><td class="num">3 each</td><td class="num hardc">2 each</td></tr>
+      <tr><td>Ally zerglings</td><td class="num">6</td><td class="num hardc">2</td></tr>
+      <tr><td>Care packages (of each type)</td><td class="num">3 each</td><td class="num hardc">2 each</td></tr>
+      <tr><td>Care package drops</td><td class="num">every 30s</td><td class="num hardc">every 45s</td></tr>
+      <tr><td>Health cubes heal</td><td class="num">15-45</td><td class="num hardc">10-30</td></tr>
+      <tr><td>Shield blocks</td><td class="num">75%</td><td class="num hardc">50%</td></tr>
+      <tr><td>Respawns</td><td class="num">20s &rarr; 5s</td><td class="num hardc">16s &rarr; 4s</td></tr>
+      <tr><td>Missiles &amp; hazards hurt</td><td class="num">x1</td><td class="num hardc">x1.25</td></tr>
+      <tr><td>Zergling HP (mini / maxi)</td><td class="num">1 / 2</td><td class="num hardc">2 / 3</td></tr>
+      <tr><td>Demon HP</td><td class="num">40</td><td class="num hardc">50</td></tr>
+      <tr><td>Your kill points</td><td class="num">x1</td><td class="num good">x1.5</td></tr>
+    </table></div>
+    <div class="pair">
+      <figure><img src="images/mode_easy.png" alt="EASY shown in the wave panel"><figcaption>On Easy, <b>EASY</b> cycles cold colours in the wave panel.</figcaption></figure>
+      <figure><img src="images/mode_hard.png" alt="HARD shown in the wave panel"><figcaption>On Hard, <b>HARD</b> cycles hot colours, and x1.5 sits by your score.</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="tips">
+    <h2>14. Tips</h2>
+    <ul>
+      <li><b>Kill shapes before they land.</b> Every bounce makes them faster and tougher.</li>
+      <li><b>Don't kite forever.</b> An enemy you keep at range charges a missile.</li>
+      <li><b>Watch the zone-in streaks</b> -- they show where the next enemy (or demon) appears.</li>
+      <li><b>Clear the arena for cake.</b> Health only drops while no enemies are about.</li>
+      <li><b>Collect care packages.</b> Leave them and tanks, zerglings and stockpile-hungry mini zergs will take them.</li>
+      <li><b>Hop.</b> Space clears hazards, tanks and lunging zerglings.</li>
+      <li><b>Memorise the bomb zones</b> in the 2-second warning.</li>
+      <li><b>Accuracy multiplies your score</b> -- spray-and-pray costs points.</li>
+      <li><b>Shield bursts</b>: switch it on for the dangerous seconds, then off again.</li>
+    </ul>
+  </section>
+
+  <!-- ===================================================== -->
+  <section id="bestiary">
+    <h2>15. Field guide<small>Every card from the title screen's showcase -- click one to enlarge</small></h2>
+    <div class="cards">
+      <figure><img src="images/cards/cone.png" alt="Cone"></figure>
+      <figure><img src="images/cards/tetrahedron.png" alt="Tetrahedron"></figure>
+      <figure><img src="images/cards/pyramid.png" alt="Pyramid"></figure>
+      <figure><img src="images/cards/cube.png" alt="Cube"></figure>
+      <figure><img src="images/cards/octahedron.png" alt="Octahedron"></figure>
+      <figure><img src="images/cards/octagonal_prism.png" alt="Octagonal prism"></figure>
+      <figure><img src="images/cards/dodecahedron.png" alt="Dodecahedron"></figure>
+      <figure><img src="images/cards/sphere.png" alt="Sphere"></figure>
+      <figure><img src="images/cards/tank.png" alt="Tank"></figure>
+      <figure><img src="images/cards/turret.png" alt="Turret"></figure>
+      <figure><img src="images/cards/boss.png" alt="Demon"></figure>
+      <figure><img src="images/cards/hazard.png" alt="Hazard cube"></figure>
+      <figure><img src="images/cards/boss_hazard.png" alt="Boss hazard"></figure>
+      <figure><img src="images/cards/mini_zergling.png" alt="Mini zergling"></figure>
+      <figure><img src="images/cards/maxi_zergling.png" alt="Maxi zergling"></figure>
+      <figure><img src="images/cards/carpet_bombing.png" alt="Carpet bombing"></figure>
+      <figure><img src="images/cards/heal_cube.png" alt="Health cube"></figure>
+      <figure><img src="images/cards/power_up.png" alt="Power Up"></figure>
+      <figure><img src="images/cards/shield_pack.png" alt="Shield pack"></figure>
+      <figure><img src="images/cards/twin_shot_pack.png" alt="Twin Shot"></figure>
+      <figure><img src="images/cards/ally_zergling.png" alt="Ally zergling"></figure>
+      <figure><img src="images/cards/ally_turret.png" alt="Ally turret"></figure>
+      <figure><img src="images/cards/ally_tank.png" alt="Ally tank"></figure>
+    </div>
+  </section>
+
+  <footer>Wireframe Warfare &middot; Lazerian &middot; Player's Guide. Screenshots taken from the game itself.</footer>
+</main>
+</div>
+
+<div class="lightbox" id="lightbox" hidden><img alt=""></div>
+<script>
+// click any card (or screenshot) to see it full size; click again to close
+const box = document.getElementById("lightbox"), big = box.querySelector("img");
+document.querySelectorAll("main figure img").forEach(img => {
+  img.style.cursor = "zoom-in";
+  img.addEventListener("click", () => { big.src = img.src; big.alt = img.alt; box.hidden = false; });
+});
+box.addEventListener("click", () => { box.hidden = true; });
+document.addEventListener("keydown", e => { if (e.key === "Escape") box.hidden = true; });
+</script>
+</body>
+</html>
