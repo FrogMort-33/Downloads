@@ -144,6 +144,7 @@
   }
   .shot:has(img) { border-style: solid; }
   .shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .shot.fit img { object-fit: contain; }  /* diagrams: show whole picture, no crop */
   figure.titled { margin: 0; display: grid; gap: .6rem; }
   figure.titled figcaption { font-weight: 600; color: var(--belly); }
 
@@ -197,6 +198,7 @@
     <a class="mark" href="#top">FrogMort</a>
     <ul>
       <li><a href="#games">Games</a></li>
+      <li><a href="#tutorials">Tutorials</a></li>
       <li><a href="#about">About</a></li>
     </ul>
   </nav>
@@ -355,6 +357,35 @@
         </div>
       </article>
 
+    </div>
+  </section>
+
+  <!-- ===================== TUTORIALS ===================== -->
+  <section id="tutorials">
+    <div class="wrap">
+      <h2>Tutorials</h2>
+      <p class="sub">Free lessons you read in your browser. No download needed.</p>
+
+      <article class="game" id="wireframe-3d">
+        <div class="game-head">
+          <div>
+            <h3>Wireframe 3D</h3>
+            <p class="tag">Simplified introduction to the 3D engine principles used in my games</p>
+          </div>
+          <div class="actions">
+            <a class="btn" href="https://frogmort-33.github.io/Tutorial/">Start the course</a>
+          </div>
+        </div>
+        <p class="blurb">Basic principles and simplified maths calculations. Construct 3D shapes, map them into a 3D world, then project them to the screen for game play. All in friendly Python examples. Early lessons get a basic 3D shape up and running, spinning on 3 axes with depth, in about 100 lines of simple code using basic maths. The tutorial builds to a playable game and covers all the key aspects of basic 3D engines.</p>
+        <p class="note">To run the code you need Python 3 and pygame-ce (<code>pip install pygame-ce</code>). Every lesson's code can be downloaded from its page.</p>
+
+        <div class="shots">
+          <div class="shot fit"><img src="images/tutorial-course-map.png" alt="The course map: eight lessons on a road from one line to a 3D cube, through spinning, solid faces, a camera and matrices, to a mini game" loading="lazy"></div>
+          <div class="shot fit"><img src="images/tutorial-corner5.png" alt="A wireframe cube with corner 5 at (1, 1, -1), the top-right-front corner, marked on x, y and z axes" loading="lazy"></div>
+          <div class="shot fit"><img src="images/tutorial-three-systems.png" alt="The same cube corner in three coordinate systems: shape, world and screen" loading="lazy"></div>
+          <div class="shot fit"><img src="images/tutorial-similar-triangles.png" alt="Two similar triangles, small orange and big green, showing where the divide-by-z projection formula comes from" loading="lazy"></div>
+        </div>
+      </article>
     </div>
   </section>
 
