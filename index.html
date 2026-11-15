@@ -189,6 +189,34 @@
     .nav ul { gap: 1rem; font-size: .95rem; }
   }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+
+  /* ---------- Game icons: a list down the right-hand side, each one jumps to its card ---------- */
+  .game-list {
+    position: fixed; right: 1rem; top: 50%; z-index: 10;
+    transform: translate(0, -50%);
+    background: rgba(7,19,10,.82);
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: .6rem;
+    opacity: 0; visibility: hidden;                      /* hidden over the hero; shown once you scroll down */
+    transition: opacity .25s, visibility .25s;
+  }
+  .game-list.show { opacity: 1; visibility: visible; }
+  .game-list ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; }
+  .game-list a {
+    display: flex; align-items: center; gap: .7rem;
+    padding: .35rem .6rem .35rem .35rem; border-radius: 10px;
+    color: var(--ink); text-decoration: none; font-weight: 600; font-size: .95rem; line-height: 1.2;
+  }
+  .game-list a:hover { background: rgba(46,154,47,.18); color: var(--belly); }
+  .game-list img { width: 44px; height: 44px; border-radius: 9px; flex: none; }
+  /* medium screens: icons only (the name is still read out by screen readers) */
+  @media (max-width: 1599px) {
+    .game-list a { padding: .3rem; }
+    .game-list .name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  }
+  /* small screens: no room beside the text, so no list */
+  @media (max-width: 1279px) { .game-list { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .game-list { transition: none; } }
 </style>
 </head>
 <body>
@@ -208,6 +236,27 @@
     <a class="btn" href="#games">See the games</a>
   </div>
 </header>
+
+<nav class="game-list" aria-label="Jump to a game">
+  <ul>
+    <li><a href="#adventure-park" title="Adventure Park"><img src="images/icon-adventure-park.png" alt=""><span class="name">Adventure Park</span></a></li>
+    <li><a href="#wireframe-warfare" title="Wireframe Warfare"><img src="images/icon-wireframe-warfare.png" alt=""><span class="name">Wireframe Warfare</span></a></li>
+    <li><a href="#red-car" title="Red Car"><img src="images/icon-red-car.png" alt=""><span class="name">Red Car</span></a></li>
+    <li><a href="#blocko" title="Blocko"><img src="images/icon-blocko.png" alt=""><span class="name">Blocko</span></a></li>
+    <li><a href="#mech-madness" title="Mech Madness"><img src="images/icon-mech-madness.png" alt=""><span class="name">Mech Madness</span></a></li>
+    <li><a href="#tanks-and-turrets" title="Tanks &amp; Turrets"><img src="images/icon-tanks-and-turrets.png" alt=""><span class="name">Tanks &amp; Turrets</span></a></li>
+  </ul>
+</nav>
+<script>
+  // Show the game list once you've scrolled past most of the big frog picture at the top
+  (function () {
+    var list = document.querySelector(".game-list");
+    var hero = document.querySelector(".hero");
+    function update() { list.classList.toggle("show", window.scrollY > hero.offsetHeight * 0.6); }
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+  })();
+</script>
 
 <main>
   <section id="games">
