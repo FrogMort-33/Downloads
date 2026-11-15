@@ -192,15 +192,13 @@
 
   /* ---------- Game icons: a list down the right-hand side, each one jumps to its card ---------- */
   .game-list {
-    position: fixed; right: 1rem; top: 50%; z-index: 10;
-    transform: translate(0, -50%);
+    position: fixed; z-index: 10;
+    top: 5.25rem;                                        /* just under the Games / Tutorials / About links ... */
+    right: clamp(1.25rem, 5vw, 4rem);                    /* ... lined up with their right-hand edge */
     background: rgba(7,19,10,.82);
     border: 1px solid var(--line); border-radius: 14px;
     padding: .6rem;
-    opacity: 0; visibility: hidden;                      /* hidden over the hero; shown once you scroll down */
-    transition: opacity .25s, visibility .25s;
   }
-  .game-list.show { opacity: 1; visibility: visible; }
   .game-list ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .35rem; }
   .game-list a {
     display: flex; align-items: center; gap: .7rem;
@@ -216,7 +214,6 @@
   }
   /* small screens: no room beside the text, so no list */
   @media (max-width: 1279px) { .game-list { display: none; } }
-  @media (prefers-reduced-motion: reduce) { .game-list { transition: none; } }
 </style>
 </head>
 <body>
@@ -247,16 +244,6 @@
     <li><a href="#tanks-and-turrets" title="Tanks &amp; Turrets"><img src="images/icon-tanks-and-turrets.png" alt=""><span class="name">Tanks &amp; Turrets</span></a></li>
   </ul>
 </nav>
-<script>
-  // Show the game list once you've scrolled past most of the big frog picture at the top
-  (function () {
-    var list = document.querySelector(".game-list");
-    var hero = document.querySelector(".hero");
-    function update() { list.classList.toggle("show", window.scrollY > hero.offsetHeight * 0.6); }
-    window.addEventListener("scroll", update, { passive: true });
-    update();
-  })();
-</script>
 
 <main>
   <section id="games">
